@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vibrant Owner Dashboard - Playo Clone</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/htmx.org@1.9.10" crossorigin="anonymous"></script>
+    <style>
+        /* Configure the Inter font */
+        html { font-family: 'Inter', sans-serif; }
+        
+        /* Custom scrollbar styling for aesthetics */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #94a3b8; border-radius: 4px; } /* Slate 400 */
+        .dark ::-webkit-scrollbar-thumb { background: #334155; } /* Slate 700 */
+
+        /* Subtle transition for all elements */
+        * {
+            transition: background-color 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s;
+        }
+
+    </style>
+    <script>
+        // Updated Tailwind Configuration for a fresh, vibrant look
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#06b6d4', /* Cyan 500 - Modern and vibrant */
+                        secondary: '#8b5cf6', /* Violet 500 - Professional accent */
+                        darkbg: '#0f172a', /* Slate 900 - Deep, consistent dark mode background */
+                        darkcard: '#1e293b', /* Slate 800 - Clear distinction for cards */
+                        lightbg: '#f8fafc', /* Slate 50 - Soft light mode background */
+                    },
+                    borderRadius: {
+                        'xl': '1.25rem',
+                        '2xl': '1.5rem', /* Deeper rounding for a friendlier feel */
+                    },
+                    boxShadow: {
+                        'lg': '0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
+                        'xl': '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
+                        'dark-xl': '0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.2)',
+                    }
+                }
+            }
+        }
+
+        // --- Dashboard Content HTML (Revamped UI) ---
+        const dashboardContent = `
+            <div class="space-y-8">
+                <h2 class="text-4xl font-extrabold text-gray-900 dark:text-gray-50 tracking-tight">Analytics & Summary</h2>
+                
+                <!-- Key Metrics Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    
+                    <!-- Metric Card 1: Total Revenue -->
+                    <div class="bg-white dark:bg-darkcard p-8 rounded-2xl shadow-xl hover:shadow-2xl dark:shadow-dark-xl transition-all duration-300 border-b-4 border-primary">
+                        <p class="text-base font-medium text-gray-500 dark:text-gray-400">Total Revenue</p>
+                        <p class="text-4xl font-bold text-gray-900 dark:text-gray-100 mt-2">
+                            ₹ 1,45,200
+                        </p>
+                        <div class="text-sm text-green-500 flex items-center mt-3">
+                            <svg class="w-4 h-4 mr-1 transform rotate-45" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path></svg>
+                            +12.5% vs. Last Month
+                        </div>
+                    </div>
+
+                    <!-- Metric Card 2: Upcoming Bookings -->
+                    <div class="bg-white dark:bg-darkcard p-8 rounded-2xl shadow-xl hover:shadow-2xl dark:shadow-dark-xl transition-all duration-300 border-b-4 border-secondary">
+                        <p class="text-base font-medium text-gray-500 dark:text-gray-400">Upcoming Bookings</p>
+                        <p class="text-4xl font-bold text-gray-900 dark:text-gray-100 mt-2">
+                            48
+                        </p>
+                        <div class="text-sm text-yellow-500 flex items-center mt-3">
+                            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                            3 pending check-ins
+                        </div>
+                    </div>
+
+                    <!-- Metric Card 3: Average Rating -->
+                    <div class="bg-white dark:bg-darkcard p-8 rounded-2xl shadow-xl hover:shadow-2xl dark:shadow-dark-xl transition-all duration-300 border-b-4 border-amber-500">
+                        <p class="text-base font-medium text-gray-500 dark:text-gray-400">Avg. Customer Rating</p>
+                        <p class="text-4xl font-bold text-gray-900 dark:text-gray-100 mt-2 flex items-center">
+                            4.7 <span class="text-amber-500 ml-1">★</span>
+                        </p>
+                        <div class="text-sm text-primary flex items-center mt-3">
+                            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                            Across 3 active venues
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Divider for Visual Separation -->
+                <div class="h-px bg-gray-200 dark:bg-slate-700 my-8"></div>
+
+                <!-- Section: Immediate Action and Activity -->
+                <div class="grid grid-cols-1 lg:grid-cols-5 gap-6">
+                    
+                    <!-- Left Column: Upcoming Check-ins (Higher Priority) -->
+                    <div class="lg:col-span-3 bg-white dark:bg-darkcard p-6 rounded-2xl shadow-xl">
+                        <div class="flex justify-between items-center mb-5">
+                            <h3 class="text-2xl font-bold text-gray-900 dark:text-gray-100">Action Required: Check-ins</h3>
+                            <button class="text-primary text-sm font-semibold hover:text-primary/80 transition-colors" onclick="loadContent('Booking Management')">View All Bookings &rarr;</button>
+                        </div>
+                        
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-100 dark:divide-slate-700">
+                                <thead class="bg-gray-50 dark:bg-slate-700/50">
+                                    <tr>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider rounded-tl-lg">Venue & Time</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Customer</th>
+                                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider rounded-tr-lg">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-gray-100 dark:divide-slate-700">
+                                    <tr class="hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors">
+                                        <td class="px-4 py-4 whitespace-nowrap">
+                                            <p class="text-sm font-medium text-gray-900 dark:text-gray-100">Football Turf (5v5)</p>
+                                            <p class="text-xs text-secondary font-medium">Today, 7:00 PM - 8:00 PM</p>
+                                        </td>
+                                        <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">Kiran Sharma</td>
+                                        <td class="px-4 py-4 whitespace-nowrap">
+                                            <button class="bg-primary text-white text-xs font-bold py-2 px-3 rounded-lg shadow-md hover:bg-primary/90 transition-colors" onclick="checkIn(123)">Check In</button>
+                                        </td>
+                                    </tr>
+                                    <tr class="hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors">
+                                        <td class="px-4 py-4 whitespace-nowrap">
+                                            <p class="text-sm font-medium text-gray-900 dark:text-gray-100">Ace Badminton (Court 2)</p>
+                                            <p class="text-xs text-secondary font-medium">Tomorrow, 6:00 AM - 7:00 AM</p>
+                                        </td>
+                                        <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">Neha Patil</td>
+                                        <td class="px-4 py-4 whitespace-nowrap">
+                                            <button class="bg-primary text-white text-xs font-bold py-2 px-3 rounded-lg shadow-md hover:bg-primary/90 transition-colors" onclick="checkIn(124)">Check In</button>
+                                        </td>
+                                    </tr>
+                                    <tr class="hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors">
+                                        <td class="px-4 py-4 whitespace-nowrap">
+                                            <p class="text-sm font-medium text-gray-900 dark:text-gray-100">Cricket Nets (Net 1)</p>
+                                            <p class="text-xs text-secondary font-medium">Tomorrow, 9:00 PM - 10:00 PM</p>
+                                        </td>
+                                        <td class="px-4 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">Amit Singh</td>
+                                        <td class="px-4 py-4 whitespace-nowrap">
+                                            <button class="bg-primary text-white text-xs font-bold py-2 px-3 rounded-lg shadow-md hover:bg-primary/90 transition-colors" onclick="checkIn(125)">Check In</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <!-- Right Column: Recent Activity Feed (Smaller) -->
+                    <div class="lg:col-span-2 bg-white dark:bg-darkcard p-6 rounded-2xl shadow-xl">
+                        <h3 class="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-5">Recent Activity</h3>
+                        <ul class="space-y-4">
+                            <!-- Activity Item 1 -->
+                            <li class="flex items-start space-x-3 p-3 rounded-xl bg-gray-50 dark:bg-slate-700 hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors">
+                                <span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-secondary/20 text-secondary mt-0.5">UPDATE</span>
+                                <p class="text-sm text-gray-700 dark:text-gray-300 flex-grow">
+                                    **Ace Badminton** pricing updated for peak hours (8 PM - 10 PM).
+                                </p>
+                                <span class="text-xs text-gray-500 dark:text-gray-400 whitespace-nowrap pt-0.5">5m ago</span>
+                            </li>
+                            <!-- Activity Item 2 -->
+                            <li class="flex items-start space-x-3 p-3 rounded-xl bg-gray-50 dark:bg-slate-700 hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors">
+                                <span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-primary/20 text-primary mt-0.5">PAYOUT</span>
+                                <p class="text-sm text-gray-700 dark:text-gray-300 flex-grow">
+                                    Payout of **₹ 50,000** processed successfully.
+                                </p>
+                                <span class="text-xs text-gray-500 dark:text-gray-400 whitespace-nowrap pt-0.5">3h ago</span>
+                            </li>
+                            <!-- Activity Item 3 -->
+                            <li class="flex items-start space-x-3 p-3 rounded-xl bg-gray-50 dark:bg-slate-700 hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors">
+                                <span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-red-500/20 text-red-500 mt-0.5">VENUE</span>
+                                <p class="text-sm text-gray-700 dark:text-gray-300 flex-grow">
+                                    **Football Turf** photos rejected. Needs higher resolution.
+                                </p>
+                                <span class="text-xs text-gray-500 dark:text-gray-400 whitespace-nowrap pt-0.5">2d ago</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Section: Performance Overview -->
+                <div class="bg-white dark:bg-darkcard p-6 rounded-2xl shadow-xl mt-8">
+                    <h3 class="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-6">Venue Performance Snapshot</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <!-- Venue Card 1 -->
+                        <div class="border border-primary/40 dark:border-primary/50 bg-primary/5 dark:bg-primary/10 p-5 rounded-xl space-y-2">
+                            <p class="text-xl font-bold text-primary">Dombivli Football Turf</p>
+                            <p class="text-gray-500 dark:text-gray-400 text-sm">Revenue Share: 45%</p>
+                            <div class="pt-2">
+                                <span class="text-sm text-gray-700 dark:text-gray-300 font-medium block">Occupancy: <span class="text-secondary font-bold">65%</span></span>
+                                <span class="text-sm text-gray-700 dark:text-gray-300 font-medium block">Rating: <span class="text-amber-500 font-bold">4.7 <span class="text-gray-400">(212)</span></span></span>
+                            </div>
+                        </div>
+                        <!-- Venue Card 2 -->
+                        <div class="border border-secondary/40 dark:border-secondary/50 bg-secondary/5 dark:bg-secondary/10 p-5 rounded-xl space-y-2">
+                            <p class="text-xl font-bold text-secondary">Ace Badminton Court</p>
+                            <p class="text-gray-500 dark:text-gray-400 text-sm">Revenue Share: 35%</p>
+                            <div class="pt-2">
+                                <span class="text-sm text-gray-700 dark:text-gray-300 font-medium block">Occupancy: <span class="text-primary font-bold">80%</span></span>
+                                <span class="text-sm text-gray-700 dark:text-gray-300 font-medium block">Rating: <span class="text-amber-500 font-bold">4.9 <span class="text-gray-400">(450)</span></span></span>
+                            </div>
+                        </div>
+                        <!-- Venue Card 3 -->
+                        <div class="border border-red-400/40 dark:border-red-400/50 bg-red-400/5 dark:bg-red-400/10 p-5 rounded-xl space-y-2">
+                            <p class="text-xl font-bold text-red-500">Kalyan Indoor Cricket</p>
+                            <p class="text-gray-500 dark:text-gray-400 text-sm">Revenue Share: 20%</p>
+                            <div class="pt-2">
+                                <span class="text-sm text-gray-700 dark:text-gray-300 font-medium block">Occupancy: <span class="text-red-500 font-bold">45%</span></span>
+                                <span class="text-sm text-gray-700 dark:text-gray-300 font-medium block">Rating: <span class="text-amber-500 font-bold">4.1 <span class="text-gray-400">(88)</span></span></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+        // --- End Dashboard Content HTML ---
+
+
+        // Simple client-side Dark Mode toggle for demonstration
+        function toggleDarkMode() {
+            const html = document.documentElement;
+            const isDark = html.classList.toggle('dark');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+        }
+
+        // On load, set the theme
+        document.addEventListener('DOMContentLoaded', () => {
+            if (localStorage.getItem('theme') === 'dark' || (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        });
+
+        function checkIn(bookingId) {
+            console.log('Simulating check-in for booking ID:', bookingId);
+            const statusMessage = document.getElementById('status-message');
+            statusMessage.textContent = 'Booking ' + bookingId + ' has been successfully checked in.';
+            statusMessage.classList.remove('hidden', 'opacity-0');
+            statusMessage.classList.add('opacity-100');
+            setTimeout(() => {
+                statusMessage.classList.remove('opacity-100');
+                statusMessage.classList.add('opacity-0');
+                setTimeout(() => statusMessage.classList.add('hidden'), 500);
+            }, 3000);
+        }
+
+        function loadContent(title) {
+            const mainContent = document.getElementById('main-content');
+            
+            let detailedContent = '';
+
+            // Update active state in sidebar (using Tailwind's ring/text-white for active state)
+            document.querySelectorAll('nav button').forEach(btn => {
+                btn.classList.remove('bg-primary', 'ring-2', 'ring-primary/50', 'text-white', 'shadow-lg');
+                btn.classList.add('text-gray-700', 'dark:text-gray-300', 'hover:bg-gray-100', 'dark:hover:bg-slate-700');
+            });
+
+            // Find the clicked button and set active style
+            const clickedButton = Array.from(document.querySelectorAll('nav button')).find(
+                btn => btn.getAttribute('onclick') && btn.getAttribute('onclick').includes(title)
+            );
+            
+            if (clickedButton) {
+                clickedButton.classList.add('bg-primary', 'ring-2', 'ring-primary/50', 'text-white', 'shadow-lg');
+                clickedButton.classList.remove('text-gray-700', 'dark:text-gray-300', 'hover:bg-gray-100', 'dark:hover:bg-slate-700');
+            }
+
+
+            // --- Detailed Content Generation based on Title (Applied New Styling) ---
+            if (title === 'Dashboard Overview') {
+                detailedContent = dashboardContent; // Load from the defined string variable
+            }
+            else if (title === 'Manage Venues') {
+                detailedContent = `
+                    <div class="space-y-8">
+                        <div class="flex justify-between items-center mb-6">
+                            <h2 class="text-4xl font-extrabold text-gray-900 dark:text-gray-50 tracking-tight">Manage Venues</h2>
+                            <button class="bg-secondary hover:bg-secondary/90 text-white font-bold py-3 px-6 rounded-xl shadow-lg transition-colors duration-200">+ Add New Facility</button>
+                        </div>
+
+                        <!-- Venue Card 1: Football Turf -->
+                        <div class="bg-white dark:bg-darkcard p-6 rounded-2xl shadow-xl border-l-8 border-primary hover:shadow-2xl transition-shadow">
+                            <div class="md:flex justify-between items-center">
+                                <div>
+                                    <h3 class="text-2xl font-bold text-gray-900 dark:text-gray-100">Dombivli Football Turf (5v5)</h3>
+                                    <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Near Station East | Sport: Football</p>
+                                </div>
+                                <span class="text-sm font-semibold px-4 py-1.5 rounded-full bg-green-500/20 text-green-500 mt-3 md:mt-0">ACTIVE & VERIFIED</span>
+                            </div>
+                            <div class="mt-5 grid grid-cols-2 lg:grid-cols-4 gap-4 text-sm border-t border-gray-100 dark:border-slate-700 pt-4">
+                                <div class="font-semibold text-gray-700 dark:text-gray-300">Bookings (30 days): <span class="font-bold text-primary">187</span></div>
+                                <div class="font-semibold text-gray-700 dark:text-gray-300">Rating: <span class="font-bold text-amber-500">4.7 ★</span></div>
+                                <div class="font-semibold text-gray-700 dark:text-gray-300">Capacity: 10 players</div>
+                                <div class="font-semibold text-gray-700 dark:text-gray-300">Last Updated: 2 days ago</div>
+                            </div>
+                            <div class="mt-6 space-x-4">
+                                <button class="text-primary hover:text-primary/80 font-semibold transition-colors border-b-2 border-transparent hover:border-primary">Edit Details</button>
+                                <button class="text-secondary hover:text-secondary/80 font-semibold transition-colors border-b-2 border-transparent hover:border-secondary">Block Slots</button>
+                                <button class="text-red-500 hover:text-red-400 font-semibold transition-colors border-b-2 border-transparent hover:border-red-500">Deactivate</button>
+                            </div>
+                        </div>
+
+                        <!-- Venue Card 2: Badminton Court -->
+                        <div class="bg-white dark:bg-darkcard p-6 rounded-2xl shadow-xl border-l-8 border-secondary hover:shadow-2xl transition-shadow">
+                            <div class="md:flex justify-between items-center">
+                                <div>
+                                    <h3 class="text-2xl font-bold text-gray-900 dark:text-gray-100">Ace Badminton Court (Court 2)</h3>
+                                    <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Industrial Area | Sport: Badminton</p>
+                                </div>
+                                <span class="text-sm font-semibold px-4 py-1.5 rounded-full bg-green-500/20 text-green-500 mt-3 md:mt-0">ACTIVE & VERIFIED</span>
+                            </div>
+                            <div class="mt-5 grid grid-cols-2 lg:grid-cols-4 gap-4 text-sm border-t border-gray-100 dark:border-slate-700 pt-4">
+                                <div class="font-semibold text-gray-700 dark:text-gray-300">Bookings (30 days): <span class="font-bold text-primary">230</span></div>
+                                <div class="font-semibold text-gray-700 dark:text-gray-300">Rating: <span class="font-bold text-amber-500">4.9 ★</span></div>
+                                <div class="font-semibold text-gray-700 dark:text-gray-300">Capacity: 4 players</div>
+                                <div class="font-semibold text-gray-700 dark:text-gray-300">Last Updated: 5 hours ago</div>
+                            </div>
+                            <div class="mt-6 space-x-4">
+                                <button class="text-primary hover:text-primary/80 font-semibold transition-colors border-b-2 border-transparent hover:border-primary">Edit Details</button>
+                                <button class="text-secondary hover:text-secondary/80 font-semibold transition-colors border-b-2 border-transparent hover:border-secondary">Block Slots</button>
+                                <button class="text-red-500 hover:text-red-400 font-semibold transition-colors border-b-2 border-transparent hover:border-red-500">Deactivate</button>
+                            </div>
+                        </div>
+
+                        <!-- Venue Card 3: Cricket Nets -->
+                        <div class="bg-white dark:bg-darkcard p-6 rounded-2xl shadow-xl border-l-8 border-yellow-500 hover:shadow-2xl transition-shadow">
+                            <div class="md:flex justify-between items-center">
+                                <div>
+                                    <h3 class="text-2xl font-bold text-gray-900 dark:text-gray-100">Kalyan Indoor Cricket Nets (Net 1)</h3>
+                                    <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Kalyan Naka | Sport: Cricket</p>
+                                </div>
+                                <span class="text-sm font-semibold px-4 py-1.5 rounded-full bg-yellow-500/20 text-yellow-500 mt-3 md:mt-0">DOCS PENDING</span>
+                            </div>
+                            <div class="mt-5 grid grid-cols-2 lg:grid-cols-4 gap-4 text-sm border-t border-gray-100 dark:border-slate-700 pt-4">
+                                <div class="font-semibold text-gray-700 dark:text-gray-300">Bookings (30 days): <span class="font-bold text-primary">45</span></div>
+                                <div class="font-semibold text-gray-700 dark:text-gray-300">Rating: <span class="font-bold text-amber-500">4.1 ★</span></div>
+                                <div class="font-semibold text-gray-700 dark:text-gray-300">Capacity: 6 players</div>
+                                <div class="font-semibold text-gray-700 dark:text-gray-300">Last Updated: 1 week ago</div>
+                            </div>
+                            <div class="mt-6 space-x-4">
+                                <button class="bg-yellow-500 text-white font-semibold py-2 px-4 rounded-lg hover:bg-yellow-600 transition-colors">Upload Documents</button>
+                                <button class="text-primary hover:text-primary/80 font-semibold transition-colors border-b-2 border-transparent hover:border-primary">Edit Pricing</button>
+                            </div>
+                        </div>
+
+                    </div>
+                `;
+            } else if (title === 'Availability & Pricing') {
+                detailedContent = `
+                    <div class="space-y-8">
+                        <h2 class="text-4xl font-extrabold text-gray-900 dark:text-gray-50 tracking-tight">Pricing & Availability Controls</h2>
+
+                        <div class="bg-white dark:bg-darkcard p-6 rounded-2xl shadow-xl">
+                            <h3 class="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-5">Hourly Pricing Slabs</h3>
+                            <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 border-b border-gray-100 dark:border-slate-700 pb-4">
+                                <select class="dark:bg-slate-700 dark:text-gray-200 border border-gray-300 dark:border-slate-600 rounded-lg p-3 text-base focus:ring-primary focus:border-primary transition-colors">
+                                    <option>Dombivli Football Turf (Current)</option>
+                                    <option>Ace Badminton Court</option>
+                                </select>
+                                <button class="text-secondary font-semibold hover:text-secondary/80 mt-3 md:mt-0 py-2 px-4 rounded-lg border border-secondary/50">Modify Base Price</button>
+                            </div>
+
+                            <div class="overflow-x-auto">
+                                <table class="min-w-full divide-y divide-gray-200 dark:divide-slate-700">
+                                    <thead class="bg-gray-50 dark:bg-slate-700/50">
+                                        <tr>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Day Range</th>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Time Slot</th>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Rate (per hour)</th>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Type</th>
+                                            <th class="px-6 py-3"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="divide-y divide-gray-100 dark:divide-slate-700">
+                                        <tr class="hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors">
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-900 dark:text-gray-100">Mon - Fri</td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-400">6:00 AM - 5:00 PM</td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-green-600 font-bold">₹ 1,500</td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm"><span class="text-xs font-medium px-3 py-1 rounded-full bg-green-500/20 text-green-500">Off-Peak</span></td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium"><button class="text-primary hover:text-primary/80">Edit</button></td>
+                                        </tr>
+                                        <tr class="hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors">
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-900 dark:text-gray-100">Mon - Fri</td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-400">5:00 PM - 11:00 PM</td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-red-600 font-bold">₹ 2,200</td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm"><span class="text-xs font-medium px-3 py-1 rounded-full bg-red-500/20 text-red-500">Peak Hour</span></td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium"><button class="text-primary hover:text-primary/80">Edit</button></td>
+                                        </tr>
+                                        <tr class="hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors">
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-900 dark:text-gray-100">Sat - Sun</td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-400">All Day</td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-red-600 font-bold">₹ 2,800</td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm"><span class="text-xs font-medium px-3 py-1 rounded-full bg-red-500/20 text-red-500">Weekend Peak</span></td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium"><button class="text-primary hover:text-primary/80">Edit</button></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="bg-white dark:bg-darkcard p-6 rounded-2xl shadow-xl">
+                            <h3 class="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-4">Manual Availability Blocks</h3>
+                            <p class="text-gray-600 dark:text-gray-400 text-sm mb-5">Temporarily block slots for maintenance or private events.</p>
+                            <ul class="space-y-3">
+                                <li class="flex justify-between items-center bg-gray-50 dark:bg-slate-700 p-4 rounded-xl border-l-4 border-amber-500 hover:bg-gray-100 dark:hover:bg-slate-700/80 transition-colors">
+                                    <span class="font-medium text-gray-900 dark:text-gray-100">Football Turf Maintenance:</span>
+                                    <span class="text-sm text-gray-600 dark:text-gray-300 font-mono">2024-05-25 (All Day)</span>
+                                    <button class="text-red-500 text-sm hover:text-red-400 font-medium">Remove</button>
+                                </li>
+                                <li class="flex justify-between items-center bg-gray-50 dark:bg-slate-700 p-4 rounded-xl border-l-4 border-amber-500 hover:bg-gray-100 dark:hover:bg-slate-700/80 transition-colors">
+                                    <span class="font-medium text-gray-900 dark:text-gray-100">Cricket Net Private Event:</span>
+                                    <span class="text-sm text-gray-600 dark:text-gray-300 font-mono">2024-05-30, 8 PM - 10 PM</span>
+                                    <button class="text-red-500 text-sm hover:text-red-400 font-medium">Remove</button>
+                                </li>
+                            </ul>
+                            <button class="mt-5 text-primary text-sm font-bold hover:text-primary/80 transition-colors py-2 px-4 rounded-lg border border-primary/50">+ Add New Block</button>
+                        </div>
+                    </div>
+                `;
+            } else if (title === 'Booking Management') {
+                detailedContent = `
+                    <div class="space-y-8">
+                        <h2 class="text-4xl font-extrabold text-gray-900 dark:text-gray-50 tracking-tight">Booking Management</h2>
+                        
+                        <div class="flex flex-wrap gap-4 mb-6">
+                            <button class="bg-primary text-white py-2.5 px-6 rounded-xl font-bold shadow-md hover:bg-primary/90">Confirmed (12)</button>
+                            <button class="bg-gray-200 dark:bg-slate-700 text-gray-800 dark:text-gray-300 py-2.5 px-6 rounded-xl font-medium hover:bg-gray-300 dark:hover:bg-slate-600">Completed (450)</button>
+                            <button class="bg-gray-200 dark:bg-slate-700 text-gray-800 dark:text-gray-300 py-2.5 px-6 rounded-xl font-medium hover:bg-gray-300 dark:hover:bg-slate-600">Canceled (5)</button>
+                            <button class="bg-gray-200 dark:bg-slate-700 text-gray-800 dark:text-gray-300 py-2.5 px-6 rounded-xl font-medium hover:bg-gray-300 dark:hover:bg-slate-600">No-Show (2)</button>
+                        </div>
+
+                        <!-- Booking List -->
+                        <div class="space-y-4">
+                            <!-- Booking Item 1 -->
+                            <div class="bg-white dark:bg-darkcard p-5 rounded-2xl shadow-lg flex flex-col md:flex-row items-start md:items-center justify-between hover:shadow-xl transition-shadow border-l-4 border-primary">
+                                <div>
+                                    <p class="text-xl font-bold text-gray-900 dark:text-gray-100">#BKNG1051 - Kiran Sharma</p>
+                                    <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Dombivli Football Turf | <span class="font-medium text-secondary">Today, 7:00 PM - 8:00 PM</span></p>
+                                    <p class="text-sm text-green-600 font-bold mt-2">₹ 1,800 PAID</p>
+                                </div>
+                                <div class="flex items-center space-x-3 mt-4 md:mt-0">
+                                    <span class="text-xs font-semibold px-3 py-1 rounded-full bg-green-500/20 text-green-500">CONFIRMED</span>
+                                    <button class="bg-primary text-white font-bold py-2 px-4 rounded-lg shadow-md hover:bg-primary/90" onclick="checkIn(1051)">Check In</button>
+                                </div>
+                            </div>
+                            
+                            <!-- Booking Item 2 -->
+                            <div class="bg-white dark:bg-darkcard p-5 rounded-2xl shadow-lg flex flex-col md:flex-row items-start md:items-center justify-between hover:shadow-xl transition-shadow border-l-4 border-primary">
+                                <div>
+                                    <p class="text-xl font-bold text-gray-900 dark:text-gray-100">#BKNG1052 - Rohan Das</p>
+                                    <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Ace Badminton Court | <span class="font-medium text-secondary">Tomorrow, 8:00 PM - 9:00 PM</span></p>
+                                    <p class="text-sm text-green-600 font-bold mt-2">₹ 750 PAID</p>
+                                </div>
+                                <div class="flex items-center space-x-3 mt-4 md:mt-0">
+                                    <span class="text-xs font-semibold px-3 py-1 rounded-full bg-green-500/20 text-green-500">CONFIRMED</span>
+                                    <button class="bg-primary text-white font-bold py-2 px-4 rounded-lg shadow-md hover:bg-primary/90" onclick="checkIn(1052)">Check In</button>
+                                </div>
+                            </div>
+
+                            <!-- Booking Item 3 (Cancelled Example) -->
+                            <div class="bg-white dark:bg-darkcard p-5 rounded-2xl shadow-lg flex flex-col md:flex-row items-start md:items-center justify-between opacity-70 border-l-4 border-red-500">
+                                <div>
+                                    <p class="text-xl font-bold text-gray-900 dark:text-gray-100">#BKNG1048 - Priya Shah</p>
+                                    <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Cricket Nets | Yesterday, 9:00 AM - 10:00 AM</p>
+                                    <p class="text-sm text-red-600 font-bold mt-2">₹ 1,500 REFUNDED</p>
+                                </div>
+                                <div class="flex items-center space-x-3 mt-4 md:mt-0">
+                                    <span class="text-xs font-semibold px-3 py-1 rounded-full bg-red-500/20 text-red-500">CANCELED</span>
+                                    <button class="text-gray-400 cursor-not-allowed py-2 px-4 rounded-lg border border-gray-300 dark:border-slate-600">View Details</button>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                `;
+            } else if (title === 'Payouts & Earnings') {
+                detailedContent = `
+                    <div class="space-y-8">
+                        <h2 class="text-4xl font-extrabold text-gray-900 dark:text-gray-50 tracking-tight">Payouts & Earnings</h2>
+
+                        <!-- Earnings Summary -->
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <div class="bg-white dark:bg-slate-700 p-6 rounded-2xl shadow-lg border-l-4 border-primary">
+                                <p class="text-base text-gray-500 dark:text-gray-400">Pending Balance</p>
+                                <p class="text-3xl font-bold text-gray-900 dark:text-gray-100 mt-1">₹ 35,500</p>
+                                <button class="mt-2 text-primary text-sm font-semibold hover:text-primary/80">Request Early Payout</button>
+                            </div>
+                            <div class="bg-white dark:bg-slate-700 p-6 rounded-2xl shadow-lg border-l-4 border-secondary">
+                                <p class="text-base text-gray-500 dark:text-gray-400">Total Paid (YTD)</p>
+                                <p class="text-3xl font-bold text-gray-900 dark:text-gray-100 mt-1">₹ 15,45,000</p>
+                                <span class="mt-2 text-xs text-gray-500 dark:text-gray-400 block">Since January 1st</span>
+                            </div>
+                            <div class="bg-white dark:bg-slate-700 p-6 rounded-2xl shadow-lg border-l-4 border-amber-500">
+                                <p class="text-base text-gray-500 dark:text-gray-400">Next Scheduled Payout</p>
+                                <p class="text-3xl font-bold text-gray-900 dark:text-gray-100 mt-1">May 30, 2024</p>
+                                <span class="mt-2 text-xs text-gray-500 dark:text-gray-400 block">₹ 88,200 (Estimated)</span>
+                            </div>
+                        </div>
+
+                        <!-- Payout History Table -->
+                        <div class="bg-white dark:bg-darkcard p-6 rounded-2xl shadow-xl">
+                            <h3 class="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-5">Recent Payout History</h3>
+                            <div class="overflow-x-auto">
+                                <table class="min-w-full divide-y divide-gray-200 dark:divide-slate-700">
+                                    <thead class="bg-gray-50 dark:bg-slate-700/50">
+                                        <tr>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Date</th>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Amount</th>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Status</th>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Method</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="divide-y divide-gray-100 dark:divide-slate-700">
+                                        <tr class="hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors">
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">May 15, 2024</td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-green-600">₹ 50,000</td>
+                                            <td class="px-6 py-4 whitespace-nowrap"><span class="text-xs font-medium px-3 py-1 rounded-full bg-green-500/20 text-green-500">Completed</span></td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">NEFT (Auto)</td>
+                                        </tr>
+                                        <tr class="hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors">
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">Apr 30, 2024</td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-green-600">₹ 42,500</td>
+                                            <td class="px-6 py-4 whitespace-nowrap"><span class="text-xs font-medium px-3 py-1 rounded-full bg-green-500/20 text-green-500">Completed</span></td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">IMPS (Manual)</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                    </div>
+                `;
+            } else if (title === 'Promotions & Analytics') {
+                detailedContent = `
+                    <div class="space-y-8">
+                        <h2 class="text-4xl font-extrabold text-gray-900 dark:text-gray-50 tracking-tight">Promotions & Analytics</h2>
+
+                        <!-- Analytics Metrics -->
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <div class="bg-white dark:bg-slate-700 p-6 rounded-2xl shadow-lg border-l-4 border-yellow-500">
+                                <p class="text-base text-gray-500 dark:text-gray-400">Coupon Usage Rate</p>
+                                <p class="text-3xl font-bold text-gray-900 dark:text-gray-100 mt-1">18%</p>
+                            </div>
+                            <div class="bg-white dark:bg-slate-700 p-6 rounded-2xl shadow-lg border-l-4 border-secondary">
+                                <p class="text-base text-gray-500 dark:text-gray-400">Repeat Customer Rate</p>
+                                <p class="text-3xl font-bold text-gray-900 dark:text-gray-100 mt-1">45%</p>
+                            </div>
+                            <div class="bg-white dark:bg-slate-700 p-6 rounded-2xl shadow-lg border-l-4 border-primary">
+                                <p class="text-base text-gray-500 dark:text-gray-400">Total Bookings (YTD)</p>
+                                <p class="text-3xl font-bold text-gray-900 dark:text-gray-100 mt-1">1,250</p>
+                            </div>
+                        </div>
+
+                        <!-- Promotion Management -->
+                        <div class="bg-white dark:bg-darkcard p-6 rounded-2xl shadow-xl">
+                            <h3 class="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-5">Active Promotions</h3>
+                            <ul class="space-y-3">
+                                <li class="flex justify-between items-center bg-gray-50 dark:bg-slate-700 p-4 rounded-xl border-l-4 border-secondary hover:bg-gray-100 dark:hover:bg-slate-700/80 transition-colors">
+                                    <div>
+                                        <p class="font-bold text-secondary text-lg">FLASH20</p>
+                                        <p class="text-sm text-gray-500 dark:text-gray-400">20% off Cricket Nets (Active)</p>
+                                    </div>
+                                    <span class="text-sm text-gray-600 dark:text-gray-300 font-medium">Used: 42 times</span>
+                                    <button class="text-red-500 text-sm hover:text-red-400 font-medium">Pause</button>
+                                </li>
+                                <li class="flex justify-between items-center bg-gray-50 dark:bg-slate-700 p-4 rounded-xl border-l-4 border-primary hover:bg-gray-100 dark:hover:bg-slate-700/80 transition-colors">
+                                    <div>
+                                        <p class="font-bold text-primary text-lg">FIRSTBOOK</p>
+                                        <p class="text-sm text-gray-500 dark:text-gray-400">₹ 100 off any first booking (Active)</p>
+                                    </div>
+                                    <span class="text-sm text-gray-600 dark:text-gray-300 font-medium">Used: 15 times</span>
+                                    <button class="text-red-500 text-sm hover:text-red-400 font-medium">Pause</button>
+                                </li>
+                            </ul>
+                            <button class="mt-5 text-primary text-sm font-bold hover:text-primary/80 transition-colors py-2 px-4 rounded-lg border border-primary/50">+ Create New Promotion</button>
+                        </div>
+                    </div>
+                `;
+            } 
+
+            mainContent.innerHTML = detailedContent;
+        }
+
+        // Initial content load and active state setting
+        window.onload = () => {
+             // Load the dashboard content immediately
+             loadContent('Dashboard Overview');
+        };
+    </script>
+</head>
+<body class="bg-lightbg dark:bg-darkbg text-gray-800 dark:text-gray-200 min-h-screen">
+
+    <div class="flex h-screen overflow-hidden">
+        
+        <!-- Sidebar Navigation -->
+        <aside class="w-64 bg-white dark:bg-darkcard flex flex-col shadow-2xl z-20 transition-all duration-300 ease-in-out">
+            <div class="p-6 border-b border-gray-100 dark:border-slate-700">
+                <h1 class="text-3xl font-extrabold text-primary tracking-wider">Playo Owner</h1>
+                <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Venue Management Suite</p>
+            </div>
+            
+            <nav class="flex-grow p-4 space-y-3 overflow-y-auto">
+                <!-- Navigation Items -->
+                
+                <button onclick="loadContent('Dashboard Overview')"
+                   class="w-full text-left flex items-center p-3 rounded-xl transition-all duration-200 font-semibold text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-700"
+                   aria-current="page">
+                    <svg class="w-5 h-5 mr-3 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-10v10a1 1 0 001 1h3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+                    Dashboard
+                </button>
+
+                <button onclick="loadContent('Manage Venues')"
+                        class="w-full text-left flex items-center p-3 rounded-xl transition-all duration-200 font-semibold text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-700">
+                    <svg class="w-5 h-5 mr-3 text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 16h6m-6-4h6m-6-4h6"></path></svg>
+                    Manage Venues
+                </button>
+
+                <button onclick="loadContent('Availability & Pricing')"
+                        class="w-full text-left flex items-center p-3 rounded-xl transition-all duration-200 font-semibold text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-700">
+                    <svg class="w-5 h-5 mr-3 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                    Availability & Pricing
+                </button>
+
+                <button onclick="loadContent('Booking Management')"
+                        class="w-full text-left flex items-center p-3 rounded-xl transition-all duration-200 font-semibold text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-700">
+                    <svg class="w-5 h-5 mr-3 text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
+                    Booking Management
+                </button>
+                
+                <button onclick="loadContent('Payouts & Earnings')"
+                        class="w-full text-left flex items-center p-3 rounded-xl transition-all duration-200 font-semibold text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-700">
+                    <svg class="w-5 h-5 mr-3 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m0 0l3 3m-3-3l-3 3m0 0h12m0-6V9a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m0 0l3 3m-3-3l-3 3"></path></svg>
+                    Payouts & Earnings
+                </button>
+
+                <button onclick="loadContent('Promotions & Analytics')"
+                        class="w-full text-left flex items-center p-3 rounded-xl transition-all duration-200 font-semibold text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-slate-700">
+                    <svg class="w-5 h-5 mr-3 text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.016 14C19.85 14 20.485 13.365 20.485 12.5S19.85 11 19.016 11H17v3h2.016z"></path></svg>
+                    Promotions & Analytics
+                </button>
+
+            </nav>
+            
+            <!-- Dark Mode Toggle and Logout -->
+            <div class="p-6 border-t border-gray-100 dark:border-slate-700 space-y-3">
+                <button onclick="toggleDarkMode()" class="w-full flex items-center p-3 rounded-xl transition-colors duration-200 bg-gray-100 dark:bg-slate-700 hover:bg-gray-200 dark:hover:bg-slate-600 font-medium">
+                    <svg class="w-5 h-5 mr-3 text-amber-500 dark:text-primary" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2.25a.75.75 0 01.75.75v2.25a.75.75 0 01-1.5 0V3a.75.75 0 01.75-.75zM7.766 5.634a.75.75 0 01.75.75v2.25a.75.75 0 01-1.5 0V6.384a.75.75 0 01.75-.75zM17 12a5 5 0 11-10 0 5 5 0 0110 0zM19.75 11.25H22a.75.75 0 010 1.5h-2.25a.75.75 0 010-1.5zM3 12a.75.75 0 01.75-.75h2.25a.75.75 0 010 1.5H3.75a.75.75 0 01-.75-.75zM5.634 16.234a.75.75 0 01.75-.75h2.25a.75.75 0 010 1.5H6.384a.75.75 0 01-.75-.75zM16.234 16.234a.75.75 0 01-.75-.75h2.25a.75.75 0 010 1.5h-2.25a.75.75 0 01-.75-.75zM12 18.75a.75.75 0 01.75.75v2.25a.75.75 0 01-1.5 0v-2.25a.75.75 0 01.75-.75z"></path></svg>
+                    <span class="dark:hidden">Switch to Dark Mode</span>
+                    <span class="hidden dark:inline">Switch to Light Mode</span>
+                </button>
+                <a class="w-full flex items-center p-3 rounded-xl bg-red-500/10 text-red-500 hover:bg-red-500/20 font-semibold" href="/logout">
+                    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
+                    Logout
+                </a>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="flex-1 overflow-x-hidden overflow-y-auto">
+            <header class="bg-white dark:bg-darkcard shadow-lg sticky top-0 z-10">
+                <div class="max-w-7xl mx-auto py-4 px-6 sm:px-8 lg:px-10 flex flex-wrap justify-between items-center">
+                    <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">Dombivli Turfs Management</h1>
+                    <div class="flex items-center space-x-4 mt-2 sm:mt-0">
+                        <!-- Simulation feedback message -->
+                        <div id="status-message" class="hidden opacity-0 text-sm font-bold text-green-600 bg-green-500/10 p-2 rounded-lg transition-opacity duration-500"></div>
+
+                        <button class="bg-secondary hover:bg-secondary/90 text-white font-bold py-2.5 px-6 rounded-xl shadow-md transition-colors duration-200">
+                            + New Booking
+                        </button>
+                        <!-- User Profile Placeholder -->
+                        <div class="w-10 h-10 bg-primary rounded-full flex items-center justify-center text-white font-bold text-lg cursor-pointer shadow-lg hover:ring-2 ring-offset-2 ring-primary transition-all">
+                            JD
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Dynamic Content Container -->
+            <div id="main-content" class="max-w-7xl mx-auto py-8 px-6 sm:px-8 lg:px-10">
+                <!-- Content is injected here -->
+            </div>
+        </main>
+    </div>
+
+</body>
+</html>
